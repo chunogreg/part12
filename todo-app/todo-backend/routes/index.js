@@ -10,6 +10,7 @@
 
 const express = require("express");
 const router = express.Router();
+const redis = require("../redis");
 
 const configs = require("../util/config");
 
@@ -22,6 +23,15 @@ router.get("/", async (req, res) => {
   res.send({
     ...configs,
     visits,
+  });
+});
+
+/* Statistics */
+router.get("/statistics", async (req, res) => {
+  const addedTodos = await redis.get("added_todos");
+
+  res.send({
+    added_todos: addedTodos ? Number(addedTodos) : 0,
   });
 });
 
